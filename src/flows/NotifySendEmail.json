@@ -1,13 +1,13 @@
 {
   "properties": {
     "connectionReferences": {
-      "shared_office365": {
+      "shared_sendmail": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "jrd_outlook"
+          "connectionReferenceLogicalName": "jrd_mail"
         },
         "api": {
-          "name": "shared_office365"
+          "name": "shared_sendmail"
         }
       }
     },
@@ -68,15 +68,14 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "connectionName": "shared_office365",
-              "operationId": "SendEmailV2",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+              "connectionName": "shared_sendmail",
+              "operationId": "SendEmailV3",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
             },
             "parameters": {
-              "emailMessage/To": "@triggerBody()?['text']",
-              "emailMessage/Subject": "@triggerBody()?['text_1']",
-              "emailMessage/Body": "<div style=\"font-family:Segoe UI,Arial,sans-serif;font-size:14px\">@{triggerBody()?['text_2']}<p style=\"color:#656d76;font-size:12px\">Sent by Data Issue Desk</p></div>",
-              "emailMessage/Importance": "Normal"
+              "request/to": "@triggerBody()?['text']",
+              "request/subject": "@triggerBody()?['text_1']",
+              "request/text": "<div style=\"font-family:Segoe UI,Arial,sans-serif;font-size:14px\">@{triggerBody()?['text_2']}<p style=\"color:#656d76;font-size:12px\">Sent by Data Issue Desk</p></div>"
             },
             "authentication": "@parameters('$authentication')"
           }
