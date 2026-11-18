@@ -7,6 +7,10 @@ The whole solution lives in source control and is deployed to a test environment
 
 ![Build and deploy](https://github.com/JordyRdev/powerplatform-data-issue-desk/actions/workflows/build-deploy.yml/badge.svg)
 
+| Issue list | Issue detail | Daily reminder |
+|---|---|---|
+| ![Issue list](docs/images/app-list.png) | ![Issue detail](docs/images/app-detail.png) | ![Overdue reminder](docs/images/reminder-mail.png) |
+
 ## What is in it
 
 | Layer | What | Where |
