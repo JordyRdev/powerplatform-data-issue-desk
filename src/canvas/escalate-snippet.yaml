@@ -1,0 +1,58 @@
+- lblEscalateHeading:
+    Control: Label@2.5.1
+    Properties:
+      Text: ="Escalate to the data team"
+      Visible: =!(Text(gblIssue.jrd_status) in ["Resolved", "Rejected"])
+      Color: =ThemeText
+      FontWeight: =FontWeight.Semibold
+      Size: =12
+      Height: =36
+      FillPortions: =0
+- conEscalate:
+    Control: GroupContainer@1.3.0
+    Variant: AutoLayout
+    Properties:
+      Visible: =!(Text(gblIssue.jrd_status) in ["Resolved", "Rejected"])
+      Height: =48
+      FillPortions: =0
+      LayoutMinHeight: =48
+      LayoutDirection: =LayoutDirection.Horizontal
+      LayoutAlignItems: =LayoutAlignItems.Center
+      LayoutGap: =12
+      DropShadow: =DropShadow.None
+    Children:
+      - txtReason:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            Default: =""
+            HintText: ="Why does this need attention now?"
+            Height: =40
+            Size: =12
+            BorderColor: =ThemeBorder
+            FillPortions: =1
+      - lblEscalate:
+          Control: Label@2.5.1
+          Properties:
+            Text: =If(locEscalating, "Sending...", "Escalate")
+            Color: =Color.White
+            Fill: =If(locEscalating, ThemeMuted, ThemePrimary)
+            FontWeight: =FontWeight.Semibold
+            Align: =Align.Center
+            Size: =12
+            Width: =140
+            Height: =40
+            OnSelect: |-
+              =If(
+                  IsBlank(Trim(txtReason.Text)),
+                      Notify("Give a reason to escalate.", NotificationType.Error),
+                  !locEscalating,
+                      UpdateContext({locEscalating: true});
+                      IfError(
+                          IssueEscalate.Run(Text(gblIssue.Issue), Trim(txtReason.Text));
+                          Notify("Escalated. The data team has been emailed.", NotificationType.Success);
+                          Reset(txtReason);
+                          Refresh('Issue logs'),
+                          Notify("Escalation failed: " & FirstError.Message, NotificationType.Error)
+                      );
+                      UpdateContext({locEscalating: false})
+              )

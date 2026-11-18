@@ -1,0 +1,298 @@
+- conDetailHeader:
+    Control: GroupContainer@1.3.0
+    Variant: AutoLayout
+    Properties:
+      Fill: =ThemeDark
+      X: =0
+      Y: =0
+      Width: =Parent.Width
+      Height: =64
+      LayoutDirection: =LayoutDirection.Horizontal
+      LayoutAlignItems: =LayoutAlignItems.Center
+      LayoutGap: =16
+      PaddingLeft: =24
+      PaddingRight: =24
+      DropShadow: =DropShadow.None
+    Children:
+      - lblDetailBack:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="<  Back"
+            Color: =Color.White
+            Size: =12
+            Width: =90
+            Height: =40
+            OnSelect: =Navigate(scrIssues, ScreenTransition.None)
+      - lblDetailHeading:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Issue details"
+            Color: =Color.White
+            Size: =18
+            FontWeight: =FontWeight.Semibold
+            Height: =40
+            FillPortions: =1
+- conDetail:
+    Control: GroupContainer@1.3.0
+    Variant: AutoLayout
+    Properties:
+      X: =If(IsPhone, 0, (Parent.Width - Min(Parent.Width, 900)) / 2)
+      Y: =64
+      Width: =Min(Parent.Width, 900)
+      Height: =Parent.Height - 64
+      LayoutDirection: =LayoutDirection.Vertical
+      LayoutAlignItems: =LayoutAlignItems.Stretch
+      LayoutGap: =8
+      LayoutOverflowY: =LayoutOverflow.Scroll
+      PaddingTop: =24
+      PaddingBottom: =24
+      PaddingLeft: =If(IsPhone, 12, 32)
+      PaddingRight: =If(IsPhone, 12, 32)
+      DropShadow: =DropShadow.None
+    Children:
+      - lblIssueTitle:
+          Control: Label@2.5.1
+          Properties:
+            Text: =gblIssue.Title
+            Color: =ThemeText
+            Size: =20
+            FontWeight: =FontWeight.Semibold
+            AutoHeight: =true
+            FillPortions: =0
+      - lblIssueMeta:
+          Control: Label@2.5.1
+          Properties:
+            Text: |-
+              ="Reported by " & gblIssue.'Reported by' & " on " & Text(gblIssue.'Reported on', "d mmm yyyy, hh:mm")
+            Color: =ThemeMuted
+            Size: =11
+            Height: =28
+            FillPortions: =0
+      - galFacts:
+          Control: Gallery@2.15.0
+          Variant: Horizontal
+          Properties:
+            Items: |-
+              =Table(
+                  {Label: "Status", Value: Text(gblIssue.jrd_status)},
+                  {Label: "Severity", Value: Text(gblIssue.Severity)},
+                  {Label: "Data source", Value: gblIssue.'Data source'.Name},
+                  {Label: "Days open", Value: Text(DateDiff(gblIssue.'Reported on', Coalesce(gblIssue.'Resolved on', Now()), TimeUnit.Days))}
+              )
+            Height: =80
+            FillPortions: =0
+            LayoutMinHeight: =80
+            TemplateSize: =Max(140, (Self.Width - 24) / 4)
+            TemplatePadding: =4
+            ShowScrollbar: =false
+          Children:
+            - shpFact:
+                Control: Rectangle@2.3.0
+                Properties:
+                  X: =0
+                  Y: =0
+                  Width: =Parent.TemplateWidth
+                  Height: =Parent.TemplateHeight
+                  Fill: =ThemeCard
+                  BorderColor: =ThemeBorder
+                  BorderThickness: =1
+            - lblFactLabel:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =Upper(ThisItem.Label)
+                  X: =14
+                  Y: =10
+                  Width: =Parent.TemplateWidth - 28
+                  Height: =22
+                  Size: =9
+                  Color: =ThemeMuted
+            - lblFactValue:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =ThisItem.Value
+                  X: =14
+                  Y: =32
+                  Width: =Parent.TemplateWidth - 28
+                  Height: =32
+                  Size: =14
+                  FontWeight: =FontWeight.Semibold
+                  Color: |-
+                    =If(ThisItem.Value = "Critical", ColorValue("#CF222E"), ThemeText)
+      - lblDescHeading:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Description"
+            Color: =ThemeText
+            FontWeight: =FontWeight.Semibold
+            Size: =12
+            Height: =36
+            FillPortions: =0
+      - lblDesc:
+          Control: Label@2.5.1
+          Properties:
+            Text: =Coalesce(gblIssue.Description, "No description.")
+            Color: =ThemeText
+            Size: =11
+            AutoHeight: =true
+            FillPortions: =0
+      - lblImpactHeading:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Impact"
+            Visible: =!IsBlank(gblIssue.Impact)
+            Color: =ThemeText
+            FontWeight: =FontWeight.Semibold
+            Size: =12
+            Height: =36
+            FillPortions: =0
+      - lblImpact:
+          Control: Label@2.5.1
+          Properties:
+            Text: =gblIssue.Impact
+            Visible: =!IsBlank(gblIssue.Impact)
+            Color: =ThemeText
+            Size: =11
+            AutoHeight: =true
+            FillPortions: =0
+      - lblEscalateHeading:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Escalate to the data team"
+            Visible: =!(Text(gblIssue.jrd_status) in ["Resolved", "Rejected"])
+            Color: =ThemeText
+            FontWeight: =FontWeight.Semibold
+            Size: =12
+            Height: =36
+            FillPortions: =0
+      - conEscalate:
+          Control: GroupContainer@1.3.0
+          Variant: AutoLayout
+          Properties:
+            Visible: =!(Text(gblIssue.jrd_status) in ["Resolved", "Rejected"])
+            Height: =48
+            FillPortions: =0
+            LayoutMinHeight: =48
+            LayoutDirection: =LayoutDirection.Horizontal
+            LayoutAlignItems: =LayoutAlignItems.Center
+            LayoutGap: =12
+            DropShadow: =DropShadow.None
+          Children:
+            - txtReason:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  Default: =""
+                  HintText: ="Why does this need attention now?"
+                  Height: =40
+                  Size: =12
+                  BorderColor: =ThemeBorder
+                  FillPortions: =1
+            - lblEscalate:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =If(locEscalating, "Sending...", "Escalate")
+                  Color: =Color.White
+                  Fill: =If(locEscalating, ThemeMuted, ThemePrimary)
+                  FontWeight: =FontWeight.Semibold
+                  Align: =Align.Center
+                  Size: =12
+                  Width: =140
+                  Height: =40
+                  OnSelect: |-
+                    =If(
+                        IsBlank(Trim(txtReason.Text)),
+                            Notify("Give a reason to escalate.", NotificationType.Error),
+                        !locEscalating,
+                            UpdateContext({locEscalating: true});
+                            IfError(
+                                IssueEscalate.Run(Text(gblIssue.Issue), Trim(txtReason.Text));
+                                Notify("Escalated. The data team has been emailed.", NotificationType.Success);
+                                Reset(txtReason);
+                                Refresh('Issue logs'),
+                                Notify("Escalation failed: " & FirstError.Message, NotificationType.Error)
+                            );
+                            UpdateContext({locEscalating: false})
+                    )
+      - lblHistoryHeading:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Status history"
+            Color: =ThemeText
+            FontWeight: =FontWeight.Semibold
+            Size: =12
+            Height: =36
+            FillPortions: =0
+      - lblNoHistory:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="No status changes yet."
+            Visible: =CountRows(galHistory.AllItems) = 0
+            Color: =ThemeMuted
+            Size: =11
+            Height: =28
+            FillPortions: =0
+      - galHistory:
+          Control: Gallery@2.15.0
+          Variant: Vertical
+          Properties:
+            Items: |-
+              =SortByColumns(
+                  Filter('Issue logs', Issue.Issue = gblIssue.Issue),
+                  "jrd_changedon",
+                  SortOrder.Descending
+              )
+            Height: =Max(1, CountRows(Self.AllItems)) * 64
+            FillPortions: =0
+            LayoutMinHeight: =64
+            TemplateSize: =64
+            TemplatePadding: =0
+            ShowScrollbar: =false
+          Children:
+            - shpHistoryLine:
+                Control: Rectangle@2.3.0
+                Properties:
+                  X: =9
+                  Y: =0
+                  Width: =2
+                  Height: =Parent.TemplateHeight
+                  Fill: =ThemeBorder
+            - shpHistoryDot:
+                Control: Rectangle@2.3.0
+                Properties:
+                  X: =4
+                  Y: =14
+                  Width: =12
+                  Height: =12
+                  Fill: =ThemePrimary
+            - lblHistoryChange:
+                Control: Label@2.5.1
+                Properties:
+                  Text: |-
+                    =If(ThisItem.Name = "Escalated", "Escalated to the data team", Text(ThisItem.'From status') & "  →  " & Text(ThisItem.'To status'))
+                  X: =28
+                  Y: =6
+                  Width: =Parent.TemplateWidth - 220
+                  Height: =26
+                  Size: =11
+                  FontWeight: =FontWeight.Semibold
+                  Color: =ThemeText
+            - lblHistoryDate:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =Text(ThisItem.'Changed on', "d mmm yyyy, hh:mm")
+                  X: =Parent.TemplateWidth - 190
+                  Y: =6
+                  Width: =190
+                  Height: =26
+                  Align: =Align.Right
+                  Size: =10
+                  Color: =ThemeMuted
+            - lblHistoryComment:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =ThisItem.Comment
+                  X: =28
+                  Y: =32
+                  Width: =Parent.TemplateWidth - 28
+                  Height: =24
+                  Size: =10
+                  Color: =ThemeMuted
