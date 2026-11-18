@@ -1,0 +1,252 @@
+- conNewHeader:
+    Control: GroupContainer@1.3.0
+    Variant: AutoLayout
+    Properties:
+      Fill: =ThemeDark
+      X: =0
+      Y: =0
+      Width: =Parent.Width
+      Height: =64
+      LayoutDirection: =LayoutDirection.Horizontal
+      LayoutAlignItems: =LayoutAlignItems.Center
+      LayoutGap: =16
+      PaddingLeft: =24
+      PaddingRight: =24
+      DropShadow: =DropShadow.None
+    Children:
+      - lblBack:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="<  Back"
+            Color: =Color.White
+            Size: =12
+            Width: =90
+            Height: =40
+            OnSelect: =Navigate(scrIssues, ScreenTransition.None)
+      - lblNewTitle:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Report a data issue"
+            Color: =Color.White
+            Size: =18
+            FontWeight: =FontWeight.Semibold
+            Height: =40
+            FillPortions: =1
+- conForm:
+    Control: GroupContainer@1.3.0
+    Variant: AutoLayout
+    Properties:
+      X: =If(IsPhone, 0, (Parent.Width - Min(Parent.Width, 760)) / 2)
+      Y: =64
+      Width: =Min(Parent.Width, 760)
+      Height: =Parent.Height - 64
+      LayoutDirection: =LayoutDirection.Vertical
+      LayoutGap: =8
+      LayoutOverflowY: =LayoutOverflow.Scroll
+      PaddingTop: =24
+      PaddingBottom: =24
+      PaddingLeft: =If(IsPhone, 12, 32)
+      PaddingRight: =If(IsPhone, 12, 32)
+      DropShadow: =DropShadow.None
+    Children:
+      - lblTitleLabel:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Title *"
+            Color: =ThemeText
+            FontWeight: =FontWeight.Semibold
+            Size: =11
+            Height: =28
+            FillPortions: =0
+      - txtTitle:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            Default: =""
+            HintText: ="What is wrong with the data?"
+            Height: =40
+            Size: =12
+            BorderColor: =ThemeBorder
+            FillPortions: =0
+      - lblSourceLabel:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Data source *"
+            Color: =ThemeText
+            FontWeight: =FontWeight.Semibold
+            Size: =11
+            Height: =28
+            FillPortions: =0
+      - galSource:
+          Control: Gallery@2.15.0
+          Variant: Horizontal
+          Properties:
+            Items: =Sort('Data sources', Name)
+            Height: =40
+            FillPortions: =0
+            LayoutMinHeight: =40
+            TemplateSize: =150
+            TemplatePadding: =4
+            ShowScrollbar: =false
+          Children:
+            - lblSourceOption:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =ThisItem.Name
+                  X: =0
+                  Y: =0
+                  Width: =Parent.TemplateWidth
+                  Height: =Parent.TemplateHeight
+                  Align: =Align.Center
+                  Size: =10
+                  Fill: =If(locSource.Name = ThisItem.Name, ThemeDark, ThemeCard)
+                  Color: =If(locSource.Name = ThisItem.Name, Color.White, ThemeText)
+                  BorderColor: =ThemeBorder
+                  BorderThickness: =1
+                  OnSelect: |-
+                    =UpdateContext({locSource: ThisItem})
+      - lblSeverityLabel:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Severity *"
+            Color: =ThemeText
+            FontWeight: =FontWeight.Semibold
+            Size: =11
+            Height: =28
+            FillPortions: =0
+      - galSeverity:
+          Control: Gallery@2.15.0
+          Variant: Horizontal
+          Properties:
+            Items: |-
+              =Table(
+                  {Label: "Low", Value: Severity.Low},
+                  {Label: "Medium", Value: Severity.Medium},
+                  {Label: "High", Value: Severity.High},
+                  {Label: "Critical", Value: Severity.Critical}
+              )
+            Height: =40
+            FillPortions: =0
+            LayoutMinHeight: =40
+            TemplateSize: =120
+            TemplatePadding: =4
+            ShowScrollbar: =false
+          Children:
+            - lblSeverityOption:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =ThisItem.Label
+                  X: =0
+                  Y: =0
+                  Width: =Parent.TemplateWidth
+                  Height: =Parent.TemplateHeight
+                  Align: =Align.Center
+                  Size: =10
+                  Fill: =If(Coalesce(locSevLabel, "Medium") = ThisItem.Label, ThemeDark, ThemeCard)
+                  Color: =If(Coalesce(locSevLabel, "Medium") = ThisItem.Label, Color.White, ThemeText)
+                  BorderColor: =ThemeBorder
+                  BorderThickness: =1
+                  OnSelect: |-
+                    =UpdateContext({locSevLabel: ThisItem.Label, locSev: ThisItem.Value})
+      - lblDescriptionLabel:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Description"
+            Color: =ThemeText
+            FontWeight: =FontWeight.Semibold
+            Size: =11
+            Height: =28
+            FillPortions: =0
+      - txtDescription:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            Default: =""
+            Mode: =TextMode.MultiLine
+            HintText: ="Where did you see it, which records, since when?"
+            Height: =96
+            Size: =12
+            BorderColor: =ThemeBorder
+            FillPortions: =0
+      - lblImpactLabel:
+          Control: Label@2.5.1
+          Properties:
+            Text: =If(Coalesce(locSevLabel, "Medium") = "Critical", "Impact *  (required for critical issues)", "Impact")
+            Color: =If(Coalesce(locSevLabel, "Medium") = "Critical", ThemePrimary, ThemeText)
+            FontWeight: =FontWeight.Semibold
+            Size: =11
+            Height: =28
+            FillPortions: =0
+      - txtImpact:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            Default: =""
+            Mode: =TextMode.MultiLine
+            HintText: ="Which reports, decisions or customers are affected?"
+            Height: =72
+            Size: =12
+            BorderColor: =ThemeBorder
+            FillPortions: =0
+      - conActions:
+          Control: GroupContainer@1.3.0
+          Variant: AutoLayout
+          Properties:
+            Height: =56
+            FillPortions: =0
+            LayoutMinHeight: =56
+            LayoutDirection: =LayoutDirection.Horizontal
+            LayoutJustifyContent: =LayoutJustifyContent.End
+            LayoutAlignItems: =LayoutAlignItems.Center
+            LayoutGap: =12
+            DropShadow: =DropShadow.None
+          Children:
+            - lblCancel:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="Cancel"
+                  Color: =ThemeText
+                  Fill: =ThemeCard
+                  BorderColor: =ThemeBorder
+                  BorderThickness: =1
+                  Align: =Align.Center
+                  Size: =12
+                  Width: =120
+                  Height: =40
+                  OnSelect: =Navigate(scrIssues, ScreenTransition.None)
+            - lblSubmit:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="Submit issue"
+                  Color: =Color.White
+                  Fill: =ThemePrimary
+                  FontWeight: =FontWeight.Semibold
+                  Align: =Align.Center
+                  Size: =12
+                  Width: =160
+                  Height: =40
+                  OnSelect: |-
+                    =If(
+                        IsBlank(Trim(txtTitle.Text)) || IsBlank(locSource),
+                            Notify("Fill in a title and pick a data source.", NotificationType.Error),
+                        Coalesce(locSevLabel, "Medium") = "Critical" && IsBlank(Trim(txtImpact.Text)),
+                            Notify("Describe the impact for a critical issue.", NotificationType.Error),
+                        IfError(
+                            Patch(
+                                Issues,
+                                Defaults(Issues),
+                                {
+                                    Title: Trim(txtTitle.Text),
+                                    'Data source': locSource,
+                                    Severity: Coalesce(locSev, Severity.Medium),
+                                    Description: txtDescription.Text,
+                                    Impact: txtImpact.Text,
+                                    'Reported on': Now(),
+                                    'Reported by': MyEmail,
+                                    jrd_status: 'Issue status'.New
+                                }
+                            );
+                            Notify("Issue reported. Thank you!", NotificationType.Success);
+                            Reset(txtTitle); Reset(txtDescription); Reset(txtImpact);
+                            UpdateContext({locSource: Blank(), locSev: Blank(), locSevLabel: Blank()});
+                            Navigate(scrIssues, ScreenTransition.None),
+                            Notify("Could not save the issue: " & FirstError.Message, NotificationType.Error)
+                        )
+                    )

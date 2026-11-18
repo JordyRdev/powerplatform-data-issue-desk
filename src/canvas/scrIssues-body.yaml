@@ -1,0 +1,191 @@
+- conBody:
+    Control: GroupContainer@1.3.0
+    Variant: AutoLayout
+    Properties:
+      X: =0
+      Y: =64
+      Width: =Parent.Width
+      Height: =Parent.Height - 64
+      LayoutDirection: =LayoutDirection.Vertical
+      LayoutGap: =16
+      PaddingTop: =24
+      PaddingBottom: =24
+      PaddingLeft: =If(IsPhone, 12, 32)
+      PaddingRight: =If(IsPhone, 12, 32)
+      DropShadow: =DropShadow.None
+    Children:
+      - conToolbar:
+          Control: GroupContainer@1.3.0
+          Variant: AutoLayout
+          Properties:
+            Height: =44
+            FillPortions: =0
+            LayoutMinHeight: =44
+            LayoutDirection: =LayoutDirection.Horizontal
+            LayoutAlignItems: =LayoutAlignItems.Center
+            LayoutGap: =12
+            DropShadow: =DropShadow.None
+          Children:
+            - lblHeading:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="Issues  (" & CountRows(galIssues.AllItems) & ")"
+                  Color: =ThemeText
+                  Size: =20
+                  FontWeight: =FontWeight.Semibold
+                  Height: =44
+                  FillPortions: =1
+            - txtSearch:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  Default: =""
+                  HintText: ="Search by title"
+                  Width: =If(IsPhone, 140, 260)
+                  Height: =40
+                  Size: =12
+                  BorderColor: =ThemeBorder
+            - lblNewIssue:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="+  New issue"
+                  Fill: =ThemePrimary
+                  Color: =Color.White
+                  FontWeight: =FontWeight.Semibold
+                  Align: =Align.Center
+                  Size: =12
+                  Width: =140
+                  Height: =40
+                  OnSelect: =Navigate(scrNewIssue, ScreenTransition.None)
+      - galTabs:
+          Control: Gallery@2.15.0
+          Variant: Horizontal
+          Properties:
+            Items: |-
+              =Table(
+                  {Label: "All"},
+                  {Label: "New", Value: 'Issue status'.New},
+                  {Label: "Awaiting approval", Value: 'Issue status'.'Awaiting approval'},
+                  {Label: "Approved", Value: 'Issue status'.Approved},
+                  {Label: "Resolved", Value: 'Issue status'.Resolved},
+                  {Label: "Rejected", Value: 'Issue status'.Rejected}
+              )
+            Height: =36
+            FillPortions: =0
+            LayoutMinHeight: =36
+            TemplateSize: =150
+            TemplatePadding: =4
+            ShowScrollbar: =false
+          Children:
+            - lblTab:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =ThisItem.Label
+                  X: =0
+                  Y: =0
+                  Width: =Parent.TemplateWidth
+                  Height: =Parent.TemplateHeight
+                  Align: =Align.Center
+                  Size: =11
+                  Fill: =If(Coalesce(locTab, "All") = ThisItem.Label, ThemeDark, ThemeCard)
+                  Color: =If(Coalesce(locTab, "All") = ThisItem.Label, Color.White, ThemeText)
+                  BorderColor: =ThemeBorder
+                  BorderThickness: =1
+                  OnSelect: |-
+                    =UpdateContext({locTab: ThisItem.Label, locStatus: ThisItem.Value})
+      - galIssues:
+          Control: Gallery@2.15.0
+          Variant: Vertical
+          Properties:
+            Items: |-
+              =SortByColumns(
+                  Filter(
+                      Issues,
+                      IsBlank(locStatus) || jrd_status = locStatus,
+                      IsBlank(txtSearch.Text) || StartsWith(Title, txtSearch.Text)
+                  ),
+                  "jrd_reportedon",
+                  SortOrder.Descending
+              )
+            FillPortions: =1
+            LayoutMinHeight: =200
+            TemplateSize: =84
+            TemplatePadding: =6
+            Fill: =Color.Transparent
+            OnSelect: |-
+              =Set(gblIssue, ThisItem);
+              Navigate(scrIssueDetail, ScreenTransition.None)
+          Children:
+            - shpCard:
+                Control: Rectangle@2.3.0
+                Properties:
+                  X: =0
+                  Y: =0
+                  Width: =Parent.TemplateWidth
+                  Height: =Parent.TemplateHeight
+                  Fill: =ThemeCard
+                  BorderColor: =If(ThisItem.IsSelected, ThemePrimary, ThemeBorder)
+                  BorderThickness: =1
+                  OnSelect: =Select(Parent)
+            - shpSeverity:
+                Control: Rectangle@2.3.0
+                Properties:
+                  X: =0
+                  Y: =0
+                  Width: =5
+                  Height: =Parent.TemplateHeight
+                  Fill: |-
+                    =Switch(Text(ThisItem.Severity),
+                        "Critical", ColorValue("#CF222E"),
+                        "High", ColorValue("#E8590C"),
+                        "Medium", ColorValue("#BF8700"),
+                        ColorValue("#8C959F"))
+            - lblTitle:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =ThisItem.Title
+                  X: =20
+                  Y: =10
+                  Width: =Parent.TemplateWidth - 200
+                  Height: =32
+                  Size: =13
+                  FontWeight: =FontWeight.Semibold
+                  Color: =ThemeText
+                  OnSelect: =Select(Parent)
+            - lblMeta:
+                Control: Label@2.5.1
+                Properties:
+                  Text: |-
+                    =ThisItem.'Data source'.Name & "  ·  " & Text(ThisItem.'Reported on', "d mmm yyyy") & "  ·  " & Text(ThisItem.Severity)
+                  X: =20
+                  Y: =42
+                  Width: =Parent.TemplateWidth - 200
+                  Height: =26
+                  Size: =10
+                  Color: =ThemeMuted
+                  OnSelect: =Select(Parent)
+            - lblStatus:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =Text(ThisItem.jrd_status)
+                  X: =Parent.TemplateWidth - 168
+                  Y: =(Parent.TemplateHeight - 30) / 2
+                  Width: =152
+                  Height: =30
+                  Align: =Align.Center
+                  Size: =10
+                  FontWeight: =FontWeight.Semibold
+                  Fill: |-
+                    =Switch(Text(ThisItem.jrd_status),
+                        "New", ColorValue("#DDF4FF"),
+                        "Awaiting approval", ColorValue("#FFF8C5"),
+                        "Approved", ColorValue("#FBEFFF"),
+                        "Resolved", ColorValue("#DAFBE1"),
+                        ColorValue("#FFEBE9"))
+                  Color: |-
+                    =Switch(Text(ThisItem.jrd_status),
+                        "New", ColorValue("#0969DA"),
+                        "Awaiting approval", ColorValue("#9A6700"),
+                        "Approved", ColorValue("#8250DF"),
+                        "Resolved", ColorValue("#1A7F37"),
+                        ColorValue("#CF222E"))
+                  OnSelect: =Select(Parent)
