@@ -1,0 +1,70 @@
+name: Build and deploy
+
+# Packs the solution from source as managed, runs the Solution Checker,
+# and imports it into the test environment.
+on:
+  push:
+    branches: [main]
+    paths: ["solution/**", "deployment/**"]
+  workflow_dispatch:
+
+env:
+  SOLUTION: DataIssueDesk
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: microsoft/powerplatform-actions/actions-install@v1
+
+      - name: Pack managed solution
+        uses: microsoft/powerplatform-actions/pack-solution@v1
+        with:
+          solution-folder: solution/${{ env.SOLUTION }}
+          solution-file: out/${{ env.SOLUTION }}_managed.zip
+          solution-type: Managed
+          process-canvas-apps: true
+
+      - name: Solution Checker
+        uses: microsoft/powerplatform-actions/check-solution@v1
+        with:
+          environment-url: ${{ vars.PP_DEV_URL }}
+          app-id: ${{ secrets.PP_APP_ID }}
+          client-secret: ${{ secrets.PP_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.PP_TENANT_ID }}
+          path: out/${{ env.SOLUTION }}_managed.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: managed-solution
+          path: out/${{ env.SOLUTION }}_managed.zip
+
+  deploy-test:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: managed-solution
+          path: out
+
+      - uses: microsoft/powerplatform-actions/actions-install@v1
+
+      - name: Import into test
+        uses: microsoft/powerplatform-actions/import-solution@v1
+        with:
+          environment-url: ${{ vars.PP_TEST_URL }}
+          app-id: ${{ secrets.PP_APP_ID }}
+          client-secret: ${{ secrets.PP_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.PP_TENANT_ID }}
+          solution-file: out/${{ env.SOLUTION }}_managed.zip
+          use-deployment-settings-file: true
+          deployment-settings-file: deployment/test-settings.json
+          force-overwrite: true
+          publish-changes: true
+          run-asynchronously: true
