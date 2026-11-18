@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     Inside the solution "DataIssueDesk" this script:
-      - creates the connection references the flows use (Dataverse, Approvals, Mail)
+      - creates the connection references the flows use (Dataverse, Approvals, Outlook.com)
       - creates the environment variable "Approver email"; for the demo, it and "Data team mailbox"
         are set to the signed-in user so approvals and emails arrive in your own inbox
       - creates each flow from its definition in src/flows, or updates it when it already exists
@@ -20,8 +20,9 @@ param(
     [string]$TenantId = "8f2aa460-a99b-402e-b93d-d958227d6f3c",
     [string]$SolutionName = "DataIssueDesk",
     [string]$ApproverEmail,
-    [string]$TeamMailbox,     # where the flow emails go; defaults to the approver
-    [switch]$UpdateExisting   # also push the definition of flows that already exist (turns them off)
+    [string]$TeamMailbox,     # where the flow emails go; left unchanged when not given
+    [switch]$UpdateExisting,  # also push the definition of flows that already exist (turns them off)
+    [string]$Only             # deploy only flows whose file name contains this text, e.g. -Only Notify or -Only Overdue,Escalate
 )
 
 $ErrorActionPreference = "Stop"
@@ -38,7 +39,7 @@ Write-Host "`nConnection references" -ForegroundColor Cyan
 $ConnectionRefs = @(
     @{ logical = "jrd_dataverse"; display = "Data Issue Desk - Dataverse"; connector = "shared_commondataserviceforapps" },
     @{ logical = "jrd_approvals"; display = "Data Issue Desk - Approvals"; connector = "shared_approvals" },
-    @{ logical = "jrd_mail";      display = "Data Issue Desk - Mail";      connector = "shared_sendmail" }
+    @{ logical = "jrd_outlookcom"; display = "Data Issue Desk - Outlook.com"; connector = "shared_outlook" }
 )
 foreach ($c in $ConnectionRefs) {
     $found = (Invoke-Dv GET "connectionreferences?`$select=connectionreferenceid&`$filter=connectionreferencelogicalname eq '$($c.logical)'").value
@@ -86,8 +87,7 @@ if (-not $found) {
     Step "jrd_ApproverEmail created"
 }
 Set-EnvValue "jrd_ApproverEmail" $ApproverEmail
-if (-not $TeamMailbox) { $TeamMailbox = $ApproverEmail }
-Set-EnvValue "jrd_TeamMailbox" $TeamMailbox
+if ($TeamMailbox) { Set-EnvValue "jrd_TeamMailbox" $TeamMailbox }
 
 # ------------------------------------------------------------------------------------------
 # Flows
@@ -102,6 +102,12 @@ $Flows = @(
 )
 $NotifyId = $null
 foreach ($f in $Flows) {
+    $match = $false
+    foreach ($o in ($Only -split ",")) { if ($o.Trim() -and $f.file -like "*$($o.Trim())*") { $match = $true } }
+    if ($Only -and -not $match) {
+        if ($f.file -eq "NotifySendEmail.json") { $NotifyId = (Invoke-Dv GET "workflows?`$select=workflowid&`$filter=category eq 5 and name eq '$($f.name)'").value[0].workflowid }
+        continue
+    }
     # ReadAllText returns a plain string; Get-Content adds PS* properties that ConvertTo-Json would try to serialize
     $clientdata = [System.IO.File]::ReadAllText((Join-Path $Root "src\flows\$($f.file)"), [System.Text.Encoding]::UTF8)
     if ($NotifyId) { $clientdata = $clientdata.Replace("__NOTIFY_FLOW_ID__", $NotifyId) }

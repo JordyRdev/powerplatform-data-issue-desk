@@ -115,8 +115,8 @@
                 },
                 "body": {
                   "text": "@parameters('Data team mailbox (jrd_TeamMailbox)')",
-                  "text_1": "Escalated: [@{body('Get_issue')?['_jrd_severity_label']}] @{body('Get_issue')?['jrd_title']}",
-                  "text_2": "<h3>@{body('Get_issue')?['jrd_title']}</h3><p><b>Reason:</b> @{triggerBody()?['text_1']}</p><p><b>Data source:</b> @{body('Get_issue')?['_jrd_datasourceid_value@OData.Community.Display.V1.FormattedValue']}<br><b>Severity:</b> @{body('Get_issue')?['_jrd_severity_label']}<br><b>Status:</b> @{body('Get_issue')?['_jrd_status_label']}<br><b>Reported by:</b> @{body('Get_issue')?['jrd_reportedby']}</p><p>@{coalesce(body('Get_issue')?['jrd_description'], '')}</p>"
+                  "text_1": "Escalated: [@{body('Get_issue')?['jrd_severity@OData.Community.Display.V1.FormattedValue']}] @{body('Get_issue')?['jrd_title']}",
+                  "text_2": "<h3>@{body('Get_issue')?['jrd_title']}</h3><p><b>Reason:</b> @{triggerBody()?['text_1']}</p><p><b>Data source:</b> @{body('Get_issue')?['_jrd_datasourceid_value@OData.Community.Display.V1.FormattedValue']}<br><b>Severity:</b> @{body('Get_issue')?['jrd_severity@OData.Community.Display.V1.FormattedValue']}<br><b>Status:</b> @{body('Get_issue')?['jrd_status@OData.Community.Display.V1.FormattedValue']}<br><b>Reported by:</b> @{body('Get_issue')?['jrd_reportedby']}</p><p>@{coalesce(body('Get_issue')?['jrd_description'], '')}</p>"
                 }
               },
               "runAfter": {
