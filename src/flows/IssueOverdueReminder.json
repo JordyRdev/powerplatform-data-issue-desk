@@ -104,8 +104,8 @@
                     "select": {
                       "Issue": "@item()?['jrd_title']",
                       "Data source": "@item()?['_jrd_datasourceid_value@OData.Community.Display.V1.FormattedValue']",
-                      "Severity": "@item()?['_jrd_severity_label']",
-                      "Status": "@item()?['_jrd_status_label']",
+                      "Severity": "@item()?['jrd_severity@OData.Community.Display.V1.FormattedValue']",
+                      "Status": "@item()?['jrd_status@OData.Community.Display.V1.FormattedValue']",
                       "Days open": "@div(sub(ticks(utcNow()), ticks(item()?['jrd_reportedon'])), 864000000000)"
                     }
                   }
