@@ -1,0 +1,72 @@
+name: Export solution from dev
+
+# Run by hand after changing the apps or flows in dev. Exports the solution,
+# unpacks it to source (canvas app included) and opens a pull request.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  SOLUTION: DataIssueDesk
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: microsoft/powerplatform-actions/actions-install@v1
+
+      - name: Publish customizations
+        uses: microsoft/powerplatform-actions/publish-solution@v1
+        with:
+          environment-url: ${{ vars.PP_DEV_URL }}
+          app-id: ${{ secrets.PP_APP_ID }}
+          client-secret: ${{ secrets.PP_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.PP_TENANT_ID }}
+
+      - name: Export unmanaged
+        uses: microsoft/powerplatform-actions/export-solution@v1
+        with:
+          environment-url: ${{ vars.PP_DEV_URL }}
+          app-id: ${{ secrets.PP_APP_ID }}
+          client-secret: ${{ secrets.PP_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.PP_TENANT_ID }}
+          solution-name: ${{ env.SOLUTION }}
+          solution-output-file: out/${{ env.SOLUTION }}.zip
+          run-asynchronously: true
+
+      - name: Export managed
+        uses: microsoft/powerplatform-actions/export-solution@v1
+        with:
+          environment-url: ${{ vars.PP_DEV_URL }}
+          app-id: ${{ secrets.PP_APP_ID }}
+          client-secret: ${{ secrets.PP_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.PP_TENANT_ID }}
+          solution-name: ${{ env.SOLUTION }}
+          solution-output-file: out/${{ env.SOLUTION }}_managed.zip
+          managed: true
+          run-asynchronously: true
+
+      - name: Unpack to source
+        uses: microsoft/powerplatform-actions/unpack-solution@v1
+        with:
+          solution-file: out/${{ env.SOLUTION }}.zip
+          solution-folder: solution/${{ env.SOLUTION }}
+          solution-type: Both
+          overwrite-files: true
+          process-canvas-apps: true
+
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: export/${{ github.run_number }}
+          commit-message: "Export ${{ env.SOLUTION }} from dev"
+          title: "Export ${{ env.SOLUTION }} from dev (#${{ github.run_number }})"
+          body: "Solution exported from the dev environment and unpacked to source. Merging deploys it to test."
+          author: JordyRdev <JordyRdev@users.noreply.github.com>
+          committer: JordyRdev <JordyRdev@users.noreply.github.com>
+          add-paths: solution/**

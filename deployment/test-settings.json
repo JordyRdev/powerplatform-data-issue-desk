@@ -1,0 +1,12 @@
+{
+  "EnvironmentVariables": [
+    { "SchemaName": "jrd_ApproverEmail", "Value": "jordy@dekoffiegidsnl.onmicrosoft.com" },
+    { "SchemaName": "jrd_TeamMailbox", "Value": "jordan.mastery@gmail.com" },
+    { "SchemaName": "jrd_OverdueDays", "Value": "5" }
+  ],
+  "ConnectionReferences": [
+    { "LogicalName": "jrd_dataverse", "ConnectionId": "", "ConnectorId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps" },
+    { "LogicalName": "jrd_approvals", "ConnectionId": "", "ConnectorId": "/providers/Microsoft.PowerApps/apis/shared_approvals" },
+    { "LogicalName": "jrd_outlookcom", "ConnectionId": "", "ConnectorId": "/providers/Microsoft.PowerApps/apis/shared_outlook" }
+  ]
+}
