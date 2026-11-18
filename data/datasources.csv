@@ -1,0 +1,6 @@
+name,system,owneremail,criticality
+Customer CRM,Dataverse,maria.jansen@issue-desk.example,High
+Finance warehouse,Azure Synapse,tom.bakker@issue-desk.example,High
+HR system,SaaS HR platform,aisha.elamrani@issue-desk.example,Medium
+Web analytics,Tag manager export,tom.bakker@issue-desk.example,Low
+Supplier portal,SharePoint lists,aisha.elamrani@issue-desk.example,Medium

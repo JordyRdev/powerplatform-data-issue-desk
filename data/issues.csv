@@ -1,0 +1,31 @@
+title,datasource,severity,status,reportedon,resolvedon,reportedby,description,impact
+Duplicate customer records after import,Customer CRM,Medium,Resolved,2026-09-07T16:45:00Z,2026-09-11T12:45:00Z,sven.dekker@issue-desk.example,Found while checking customer CRM data.,
+Revenue in monthly report differs from ledger,Finance warehouse,High,Resolved,2026-09-09T16:15:00Z,2026-09-12T07:15:00Z,emma.smit@issue-desk.example,Found while checking finance warehouse data.,Reports using this data may show wrong numbers.
+Leavers still in headcount report,HR system,High,Rejected,2026-09-12T09:45:00Z,,emma.smit@issue-desk.example,Found while checking hR system data.,Reports using this data may show wrong numbers.
+Sessions dropped 30% after release,Web analytics,Low,Resolved,2026-09-14T10:00:00Z,2026-09-22T04:00:00Z,lotte.vermeer@issue-desk.example,Found while checking web analytics data.,
+Supplier bank details not validated,Supplier portal,High,Resolved,2026-09-17T14:45:00Z,2026-09-22T16:45:00Z,noor.hendriks@issue-desk.example,Found while checking supplier portal data.,Reports using this data may show wrong numbers.
+Missing country on new accounts,Customer CRM,Medium,Resolved,2026-09-19T10:45:00Z,2026-09-26T22:45:00Z,lotte.vermeer@issue-desk.example,Found while checking customer CRM data.,
+Late daily load from ERP,Finance warehouse,High,Resolved,2026-09-21T14:15:00Z,2026-09-28T23:15:00Z,lotte.vermeer@issue-desk.example,Found while checking finance warehouse data.,Reports using this data may show wrong numbers.
+Start date in the future,HR system,Medium,Resolved,2026-09-24T13:45:00Z,2026-09-25T15:45:00Z,sven.dekker@issue-desk.example,Found while checking hR system data.,
+Campaign tags missing on newsletter links,Web analytics,Low,Resolved,2026-09-26T09:45:00Z,2026-10-02T14:45:00Z,ravi.patel@issue-desk.example,Found while checking web analytics data.,
+Expired certificates still accepted,Supplier portal,Low,Resolved,2026-09-29T12:30:00Z,2026-10-04T12:30:00Z,lotte.vermeer@issue-desk.example,Found while checking supplier portal data.,
+Phone numbers in mixed formats,Customer CRM,Critical,Resolved,2026-10-01T10:15:00Z,2026-10-03T06:15:00Z,ravi.patel@issue-desk.example,Found while checking customer CRM data.,Reports using this data may show wrong numbers.
+Currency rate missing for 3 November,Finance warehouse,High,Resolved,2026-10-03T11:15:00Z,2026-10-09T12:15:00Z,ravi.patel@issue-desk.example,Found while checking finance warehouse data.,Reports using this data may show wrong numbers.
+Department codes changed without notice,HR system,Low,Resolved,2026-10-06T15:15:00Z,2026-10-11T16:15:00Z,lotte.vermeer@issue-desk.example,Found while checking hR system data.,
+Bot traffic in conversion numbers,Web analytics,Low,Resolved,2026-10-08T15:00:00Z,2026-10-12T03:00:00Z,ravi.patel@issue-desk.example,Found while checking web analytics data.,
+Duplicate supplier names,Supplier portal,Low,Resolved,2026-10-11T14:30:00Z,2026-10-13T17:30:00Z,sven.dekker@issue-desk.example,Found while checking supplier portal data.,
+Closed accounts still marked active,Customer CRM,Medium,Approved,2026-10-13T12:00:00Z,,emma.smit@issue-desk.example,Found while checking customer CRM data.,
+Negative quantities in sales fact,Finance warehouse,Medium,Awaiting approval,2026-10-15T16:15:00Z,,sven.dekker@issue-desk.example,Found while checking finance warehouse data.,
+Contract hours above 40,HR system,Medium,Approved,2026-10-18T12:15:00Z,,emma.smit@issue-desk.example,Found while checking hR system data.,
+Page titles truncated,Web analytics,Low,Approved,2026-10-20T15:45:00Z,,lotte.vermeer@issue-desk.example,Found while checking web analytics data.,
+Invoice dates in wrong format,Supplier portal,Low,Resolved,2026-10-23T09:30:00Z,2026-10-29T13:30:00Z,noor.hendriks@issue-desk.example,Found while checking supplier portal data.,
+Postcode invalid for Belgian customers,Customer CRM,Medium,Approved,2026-10-25T16:30:00Z,,sven.dekker@issue-desk.example,Found while checking customer CRM data.,
+Cost centre mapping outdated,Finance warehouse,Low,Resolved,2026-10-27T10:30:00Z,2026-10-28T22:30:00Z,lotte.vermeer@issue-desk.example,Found while checking finance warehouse data.,
+Manager field empty for new hires,HR system,Medium,New,2026-10-30T16:15:00Z,,sven.dekker@issue-desk.example,Found while checking hR system data.,
+Weekend data not loaded,Web analytics,Medium,New,2026-11-01T11:00:00Z,,ravi.patel@issue-desk.example,Found while checking web analytics data.,
+Payment terms missing,Supplier portal,Critical,Approved,2026-11-04T11:00:00Z,,noor.hendriks@issue-desk.example,Found while checking supplier portal data.,Reports using this data may show wrong numbers.
+Account owner empty on 40 records,Customer CRM,Critical,Awaiting approval,2026-11-06T09:00:00Z,,noor.hendriks@issue-desk.example,Found while checking customer CRM data.,Reports using this data may show wrong numbers.
+VAT totals do not reconcile,Finance warehouse,Medium,Awaiting approval,2026-11-08T10:00:00Z,,lotte.vermeer@issue-desk.example,Found while checking finance warehouse data.,
+Duplicate employee IDs,HR system,Critical,New,2026-11-11T11:30:00Z,,ravi.patel@issue-desk.example,Found while checking hR system data.,Reports using this data may show wrong numbers.
+Consent rate not tracked on mobile,Web analytics,Critical,Approved,2026-11-13T15:00:00Z,,emma.smit@issue-desk.example,Found while checking web analytics data.,Reports using this data may show wrong numbers.
+Contact email bounced,Supplier portal,High,Awaiting approval,2026-11-16T15:00:00Z,,lotte.vermeer@issue-desk.example,Found while checking supplier portal data.,Reports using this data may show wrong numbers.
