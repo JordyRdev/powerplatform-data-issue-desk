@@ -67,6 +67,6 @@ jobs:
           commit-message: "Export ${{ env.SOLUTION }} from dev"
           title: "Export ${{ env.SOLUTION }} from dev (#${{ github.run_number }})"
           body: "Solution exported from the dev environment and unpacked to source. Merging deploys it to test."
-          author: JordyRdev <JordyRdev@users.noreply.github.com>
-          committer: JordyRdev <JordyRdev@users.noreply.github.com>
+          author: JordyRdev <195427682+JordyRdev@users.noreply.github.com>
+          committer: JordyRdev <195427682+JordyRdev@users.noreply.github.com>
           add-paths: solution/**
